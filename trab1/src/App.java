@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
-class App {
-        static void main(String[] args) {
+public class App {
+        public static void main(String[] args) {
 
                 User userStandard = new User(
                                 "Teste 1",
