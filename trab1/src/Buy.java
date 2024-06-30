@@ -1,9 +1,10 @@
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import org.junit.Test;
 
-public class Buy {
+class Buy {
     String id;
     LocalDateTime date;
     User user;
@@ -17,21 +18,43 @@ public class Buy {
     // double taxICMS;
     // double taxMunicipal;
 
-    public Buy(User user, ArrayList<Product> products, String paymentType, Card card) {
+    Buy(User user, ArrayList<Product> products, String paymentType, Card card) {
+        this.id = LocalTime.now().toString();
         this.user = user;
         this.products = products;
         this.paymentType = paymentType;
         this.card = card;
-        // this.card = user.card;
     };
 
     @Test
+    double total() {
+        return subTotal()
+                + calculateTaxMunicipal()
+                + calculateTaxICMS()
+                + calculateFreight()
+                - calculateTotalDiscount();
+    }
+
+    @Test
+    double subTotal() {
+        double total = 0.0;
+
+        for (Product product : products) {
+            total += product.price;
+        }
+
+        return total;
+    }
+
+    @Test
     double calculateTotalDiscount() {
-        if (user.userType == "Special") {
+        if (user.userType == "special") {
+            // Beneficios desconto de 10% (*0.9) no valor da compra
+            // Recebe mais 10% (*0.9) de desconto se utilizar o cartão da empresa
             return 1.0;
-        } else if (user.userType == "Prime") {
+        } else if (user.userType == "prime") {
             return 2.0;
-        } else if (user.userType == "Standard") {
+        } else if (user.userType == "standard") {
             return 3.0;
         }
         return 0.0;
@@ -39,11 +62,11 @@ public class Buy {
 
     @Test
     double calculateTaxMunicipal() {
-        if (user.userType == "Special") {
+        if (user.userType == "special") {
             return 1.0;
-        } else if (user.userType == "Prime") {
+        } else if (user.userType == "prime") {
             return 2.0;
-        } else if (user.userType == "Standard") {
+        } else if (user.userType == "standard") {
             return 3.0;
         }
         return 0.0;
@@ -53,11 +76,11 @@ public class Buy {
     double calculateTaxICMS() {
         // - Fora do DF 12% de ICMS e 4% de imposto municipal
         // - Dentro do DF 18% de ICMS e 0% de imposto municipal
-        if (user.userType == "Special") {
+        if (user.userType == "special") {
             return 1.0;
-        } else if (user.userType == "Prime") {
+        } else if (user.userType == "prime") {
             return 2.0;
-        } else if (user.userType == "Standard") {
+        } else if (user.userType == "standard") {
             return 3.0;
         }
         return 0.0;
@@ -72,11 +95,13 @@ public class Buy {
         // ----- Regiao Norte R$ ----- 20,00 ---- R$ 25,00
         // ----- Regiao Sudeste ------ R$ 7,00 -- R$ 10,00
         // ----- Regiao Sul ---------- R$ 10,00 - R$ 13,00
-        if (user.userType == "Special") {
+        if (user.userType == "special") {
+            // Possui 30% (*0.7) de desconto no valor do frete
             return 1.0;
-        } else if (user.userType == "Prime") {
+        } else if (user.userType == "prime") {
+            // Frete grátis
             return 2.0;
-        } else if (user.userType == "Standard") {
+        } else if (user.userType == "standard") {
             return 3.0;
         }
         return 0.0;

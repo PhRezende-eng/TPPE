@@ -1,4 +1,4 @@
-public class Invoice {
+class Invoice {
     double icms;
     double city;
 }
